@@ -1,25 +1,24 @@
 provider "aws" {
-region = "eu-north-1"
+  region = "eu-north-1"
 }
 
-data "aws_ami" "myami" {
-
-owners = ["amazon"]
-most_recent = true
-
-filter {
+data "aws_ami" "my_ami" {
+  most_recent = true
+  owners = ["amazon"]
+  filter {
     name   = "name"
-    values = ["amzn2-ami-hvm*"]
+    values = ["amzn2-ami-hvm-*"]
+    
   }
-
 }
 
-resource "aws_instance" "myec2" {
-  ami    = data.aws_ami.myami.id 
+resource "aws_instance" "my_ec2" {
+  ami           = data.aws_ami.my_ami.id
   instance_type = "t3.micro"
-}
-
-resource "aws_instance" "myec2-2" {
-  ami    = data.aws_ami.myami.id 
-  instance_type = "t3.micro"
+  
+  tags = {
+    Name        = "MyWebServer"
+    Environment = "Development"
+  }
+  count = 1
 }
